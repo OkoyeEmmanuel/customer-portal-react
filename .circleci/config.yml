@@ -7,19 +7,21 @@ jobs:
   build_and_scan:
     docker:
       - image: cimg/node:20.5
-    working_directory: ~/project/frontend  
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          pkg-manager: npm
+          app-dir: frontend
       - run:
           name: Run Tests
-          command: npm test || echo "No tests yet"
+          command: cd frontend && npm test || echo "No tests yet"
       - run:
           name: Install Sonar Scanner
           command: sudo npm install -g sonar-scanner
       - run:
           name: Run SonarCloud Scan
           command: |
+            cd frontend
             sonar-scanner \
               -Dsonar.projectKey=OkoyeEmmanuel_customer-portal-react \
               -Dsonar.organization=okoyeemmanuel \
