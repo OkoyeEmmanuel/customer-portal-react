@@ -16,10 +16,16 @@ jobs:
           name: Run Tests
           command: cd frontend && npm test || echo "No tests yet"
       - run:
+          name: Install SonarScanner CLI
+          command: |
+            curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.9.2.5216-linux.zip
+            unzip sonar-scanner-cli.zip
+            export PATH=$PWD/sonar-scanner-4.9.2.5216-linux/bin:$PATH
+      - run:
           name: Run SonarCloud Scan
           command: |
             cd frontend
-            npx sonar-scanner \
+            sonar-scanner \
               -Dsonar.projectKey=OkoyeEmmanuel_customer-portal-react \
               -Dsonar.organization=okoyeemmanuel \
               -Dsonar.sources=./src \
