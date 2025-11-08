@@ -21,21 +21,17 @@ jobs:
   sonar_scan:
     docker:
       - image: sonarsource/sonar-scanner-cli:latest
-    environment:
-      SONAR_TOKEN: << pipeline.parameters.sonar_token >>
-      SONAR_PROJECT_KEY: << pipeline.parameters.sonar_project_key >>
-      SONAR_ORGANIZATION: << pipeline.parameters.sonar_organization >>
     steps:
       - checkout
       - run:
           name: Run SonarCloud Scan
           command: |
             sonar-scanner \
-              -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-              -Dsonar.organization=${SONAR_ORGANIZATION} \
+              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+              -Dsonar.organization=$SONAR_ORGANIZATION \
               -Dsonar.sources=frontend/src \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.token=${SONAR_TOKEN}
+              -Dsonar.token=$SONAR_TOKEN
 
 workflows:
   version: 2
