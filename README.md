@@ -1,8 +1,7 @@
 # Customer & Employee International Payments Portal 
 
 
-💳 Secure Payments Portal
-📘 Overview
+💳 Secure Payments Portal Overview
 
 The Payments Portal is a secure full-stack web application that simulates customer registration, login, and international payment functionality.
 It is built using React (Frontend) and Node.js + Express (Backend) with a MongoDB database.
