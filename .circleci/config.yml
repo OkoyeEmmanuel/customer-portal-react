@@ -4,10 +4,9 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
-  build_and_scan:
+  build:
     docker:
       - image: cimg/node:20.5
-      - image: sonarsource/sonar-scanner-cli:latest  # SonarScanner CLI container
     steps:
       - checkout
 
@@ -23,19 +22,26 @@ jobs:
             cd frontend
             npm test || echo "No tests yet"
 
-      # Run SonarCloud scan using the pre-installed scanner
+  sonar_scan:
+    docker:
+      - image: sonarsource/sonar-scanner-cli:latest
+    steps:
+      - checkout
       - run:
           name: Run SonarCloud Scan
           command: |
-            cd frontend
             sonar-scanner \
-              -Dsonar.projectKey=OkoyeEmmanuel_customer-portal-react \
-              -Dsonar.organization=okoyeemmanuel \
-              -Dsonar.sources=./src \
+              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+              -Dsonar.organization=$SONAR_ORGANIZATION \
+              -Dsonar.sources=frontend/src \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.login=$SONAR_TOKEN
 
 workflows:
+  version: 2
   main:
     jobs:
-      - build_and_scan
+      - build
+      - sonar_scan:
+          requires:
+            - build
