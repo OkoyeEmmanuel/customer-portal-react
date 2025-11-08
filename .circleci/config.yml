@@ -9,18 +9,31 @@ jobs:
       - image: cimg/node:20.5
     steps:
       - checkout
+
+      # Install Node dependencies in frontend
       - node/install-packages:
           pkg-manager: npm
           app-dir: frontend
+
+      # Run frontend tests
       - run:
           name: Run Tests
-          command: cd frontend && npm test || echo "No tests yet"
+          command: |
+            cd frontend
+            npm test || echo "No tests yet"
+
+      # Install official SonarScanner CLI
       - run:
           name: Install SonarScanner CLI
           command: |
-            curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.9.2.5216-linux.zip
+            SONAR_CLI_VERSION=4.13.0.30863
+            curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_CLI_VERSION-linux.zip
+            # Verify it’s a zip file
+            file sonar-scanner-cli.zip
             unzip sonar-scanner-cli.zip
-            export PATH=$PWD/sonar-scanner-4.9.2.5216-linux/bin:$PATH
+            export PATH=$PWD/sonar-scanner-$SONAR_CLI_VERSION-linux/bin:$PATH
+
+      # Run SonarCloud scan
       - run:
           name: Run SonarCloud Scan
           command: |
