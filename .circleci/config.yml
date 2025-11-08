@@ -45,14 +45,3 @@ workflows:
       - sonar_scan:
           requires:
             - build
-
-parameters:
-  sonar_token:
-    type: env_var_name
-    default: SONAR_TOKEN
-  sonar_project_key:
-    type: env_var_name
-    default: SONAR_PROJECT_KEY
-  sonar_organization:
-    type: env_var_name
-    default: SONAR_ORGANIZATION
