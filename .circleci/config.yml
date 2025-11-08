@@ -9,13 +9,9 @@ jobs:
       - image: cimg/node:20.5
     steps:
       - checkout
-
-      # Install Node dependencies in frontend
       - node/install-packages:
-          pkg-manager: npm
           app-dir: frontend
-
-      # Run frontend tests
+          pkg-manager: npm
       - run:
           name: Run Tests
           command: |
@@ -26,20 +22,20 @@ jobs:
     docker:
       - image: sonarsource/sonar-scanner-cli:latest
     environment:
-      SONAR_TOKEN: $SONAR_TOKEN
-      SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY
-      SONAR_ORGANIZATION: $SONAR_ORGANIZATION
+      SONAR_TOKEN: << pipeline.parameters.sonar_token >>
+      SONAR_PROJECT_KEY: << pipeline.parameters.sonar_project_key >>
+      SONAR_ORGANIZATION: << pipeline.parameters.sonar_organization >>
     steps:
       - checkout
       - run:
           name: Run SonarCloud Scan
           command: |
             sonar-scanner \
-              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.organization=$SONAR_ORGANIZATION \
+              -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+              -Dsonar.organization=${SONAR_ORGANIZATION} \
               -Dsonar.sources=frontend/src \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
+              -Dsonar.token=${SONAR_TOKEN}
 
 workflows:
   version: 2
@@ -49,3 +45,14 @@ workflows:
       - sonar_scan:
           requires:
             - build
+
+parameters:
+  sonar_token:
+    type: env_var_name
+    default: SONAR_TOKEN
+  sonar_project_key:
+    type: env_var_name
+    default: SONAR_PROJECT_KEY
+  sonar_organization:
+    type: env_var_name
+    default: SONAR_ORGANIZATION
