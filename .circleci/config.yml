@@ -25,6 +25,10 @@ jobs:
   sonar_scan:
     docker:
       - image: sonarsource/sonar-scanner-cli:latest
+    environment:
+      SONAR_TOKEN: $SONAR_TOKEN
+      SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY
+      SONAR_ORGANIZATION: $SONAR_ORGANIZATION
     steps:
       - checkout
       - run:
